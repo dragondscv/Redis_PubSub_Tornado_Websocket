@@ -1,0 +1,63 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>Event Stream Notifications</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="{{ static_url("pubsub.js") }}" type="text/javascript"></script></script>
+</head>
+<body>
+
+    <div id="subPanel">
+      <h2>Subscribe a channel</h2>
+      Supported glob-style patterns:                                          <br/>   
+      h?llo matches hello, hallo and hxllo                                    <br/>  
+      h*llo matches hllo and heeeello                                         <br/> 
+      h[ae]llo matches hello and hallo, but not hillo                         <br/>  
+      Use \ to escape special characters if you want to match them verbatim.  <br/>  
+      <input type="text" id="channelName" value="notioncommotion.corp.gq1.yahoo.com:job1"
+      size="50">
+      <input type="button" value="subscribe" id="subButton">
+    </div>
+
+
+    <div id="channelList">
+      <h2>Subscribed Channels</h1>
+    </div>
+
+
+    <div id="eventstream">
+      <h2>Event Notifications</h1>
+      {% for data in messages %}
+        {% include "message.html" %}
+      {% end %}
+    </div>
+
+
+    <div id="eventstream">
+      <h2>Passed Events</h1>
+      {% for slave, jobs in slaves.items() %}
+      <ul>
+        <li>{{ escape(slave) }}
+        {% for job, builds in jobs.items() %}
+          <ul>
+            <li>{{ escape(job) }}
+            {% for build_no, data in builds.items() %}
+            <ul>
+              <li>build-{{ escape(build_no) }}:<br>
+              status:{{ slaves[slave][job][build_no]['build_status'] }},
+              description: {{ slaves[slave][job][build_no]['build_description'] }},
+              start time: {{ slaves[slave][job][build_no]['build_time'] }},
+              duration: {{ slaves[slave][job][build_no]['build_duration'] }} ms</li>
+            </ul>
+            {% end %}
+            </li>
+          </ul>
+        {% end %}
+        </li>
+      </ul>
+      {% end %}
+    </div>
+
+</body>
+</html>
+

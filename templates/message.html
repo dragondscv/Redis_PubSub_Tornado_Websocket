@@ -1,0 +1,9 @@
+
+<div>
+  {{ data['channel_name'] }}
+  build-{{ data['build']['number'] }}:<br>
+  status:{{ data['build']['status'] }},
+  description: {{ data['build']['description'] }},
+  start time: {{ data['build']['time'] }},
+  duration: {{ data['build']['duration'] }} ms
+</div>
