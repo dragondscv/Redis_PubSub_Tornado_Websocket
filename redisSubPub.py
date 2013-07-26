@@ -7,6 +7,12 @@ class RedisSubPub():
       self._rc = redis.StrictRedis(host, port, db=0)
       self._pubsub = self._rc.pubsub();
 
+
+
+    """
+        Data retrieval functions
+    """
+
     "list all channels"
     def list_all_channels(self):
         return self.get_all_jobs()
@@ -22,6 +28,34 @@ class RedisSubPub():
     "get all builds in the format of host_name:job_name:build_name"
     def get_all_builds(self):
         return self._rc.smembers("builds")
+
+    "get all jobs belong to the host_name"
+    def get_jobs(self, host_name):
+        jobs = self.get_all_jobs()
+        results = []
+        
+        for job_key in jobs:
+            host_name_ = job_key.split(':')[0]
+            if host_name_ == host_name:
+              results.append(job_key)
+
+        return results
+
+    "get all builds belong to the host_name:job_name"
+    def get_builds(self, host_name, job_name):
+        results = {}
+        builds = self.get_all_builds()
+
+        for build_key in builds:
+            host_name_ = build_key.split(':')[0]
+            job_name_ = build_key.split(':')[1]
+
+            if (host_name_ == host_name and job_name_ == job_name):
+                build = self._rc.hgetall(build_key)
+                results[build_key] = build
+
+        return results
+
 
     "return everything in database"
     def get_all(self):
@@ -44,6 +78,17 @@ class RedisSubPub():
                     hashes[slave][job_name][build_no] = self._rc.hgetall(build_key)
 
         return hashes
+    
+    "list all keys in database, for debug purpose"
+    def list_all_keys(self):
+        hashes = self._rc.keys()
+        return hashes
+
+
+
+    """
+        Sort functions
+    """
 
     "list builds sorted by duration"
     def list_builds_by_duration(self, limit, desc=True, withscores=True):
@@ -57,20 +102,31 @@ class RedisSubPub():
     def list_builds_by_start_time(self, limit, desc=True, withscores=True):
         return self._rc.zrange("sort:build_start_time_in_millis", 0, limit, desc, withscores)
 
-    "list successful builds"
-    def list_successful_builds(self, limit):
-        pass
+    "list successful builds sorted by start time"
+    def list_successful_builds(self, limit, desc=True, withscores=True):
+        return self._rc.zrange("sort:SUCCESS", 0, limit, desc, withscores)
 
-    "list failed builds"
-    def list_failed_builds(self, limit):
-        pass
+    "list failed builds sorted by start time"
+    def list_failed_builds(self, limit, desc=True, withscores=True):
+        return self._rc.zrange("sort:FAILURE", 0, limit, desc, withscores)
+
+    "list aborted builds sorted by start time"
+    def list_aborted_builds(self, limit, desc=True, withscores=True):
+        return self._rc.zrange("sort:ABORTED", 0, limit, desc, withscores)
+
+    "list not built builds sorted by start time"
+    def list_not_built_builds(self, limit, desc=True, withscores=True):
+        return self._rc.zrange("sort:NOT_BUILT", 0, limit, desc, withscores)
+
+    "list unstable builds sorted by start time"
+    def list_unstable_builds(self, limit, desc=True, withscores=True):
+        return self._rc.zrange("sort:UNSTABLE", 0, limit, desc, withscores)
 
 
-    def list_all_keys(self):
-        hashes = self._rc.keys()
-        return hashes
 
-
+    """
+        Count functions
+    """
 
     def count_hosts(self):
         return self._rc.scard("hosts")
@@ -84,10 +140,31 @@ class RedisSubPub():
     def count_channels(self):
         return self._rc.scard("jobs")
 
+    def count_failed_builds(self):
+        return self._rc.zcard("sort:FAILURE")
+
+    def count_successful_builds(self):
+        return self._rc.zcard("sort:SUCCESS")
+
+    def count_aborted_builds(self):
+        return self._rc.zcard("sort:ABORTED")
+
+    def count_not_built_builds(self):
+        return self._rc.zcard("sort:NOT_BUILT")
+
+    def count_unstable_builds(self):
+        return self._rc.zcard("sort:UNSTABLE")
+
     # not implemented yet because python client does not support this command
     def count_active_channels(self):
         pass
 
+
+
+
+    """
+        Pub/Sub functions
+    """
 
     def subscribe(self, channel_name):
         return self._pubsub.subscribe(channel_name)
@@ -106,6 +183,8 @@ class RedisSubPub():
 
     def publish(self, channel, message):
         return self._rc.publish(channel, message)
+
+
 
     """
       Return a pubsub instance that can be listened on.
