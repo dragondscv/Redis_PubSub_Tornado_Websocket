@@ -7,6 +7,9 @@ rsp = RedisSubPub()
 def sub_listener(channel_name):
     print("subscribe to "+channel_name)
     rsp.psubscribe(channel_name)
+
+    #print "there are active channels:"
+    #print rsp.count_active_channels("*")
     
     for message in rsp.listen():
       print message

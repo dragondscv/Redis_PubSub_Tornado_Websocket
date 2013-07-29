@@ -99,7 +99,37 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         slaves = rsp.get_all()
         #print(slaves)
-        self.render("index.html", slaves=slaves, messages=[])
+
+        limit = 50
+        sortByDuration = rsp.list_builds_by_duration(limit)
+        sortByTime = rsp.list_builds_by_time(limit)
+        sortByStartTime = rsp.list_builds_by_start_time(limit)
+        count_successful = rsp.count_successful_builds()
+        successful_builds = rsp.list_successful_builds(limit)
+        count_failed = rsp.count_failed_builds()
+        failed_builds = rsp.list_failed_builds(limit)
+        count_aborted = rsp.count_aborted_builds()
+        aborted_builds = rsp.list_aborted_builds(limit)
+        count_not_built = rsp.count_not_built_builds()
+        not_built_builds = rsp.list_not_built_builds(limit)
+        count_unstable = rsp.count_unstable_builds()
+        unstable_builds = rsp.list_unstable_builds(limit)
+
+        self.render("index.html", slaves=slaves, limit=limit,
+            sortByDuration=sortByDuration,
+            sortByTime=sortByTime,
+            sortByStartTime=sortByStartTime,
+            count_successful=count_successful, successful_builds=successful_builds,
+            count_failed=count_failed, failed_builds=failed_builds,
+            count_aborted=count_aborted, aborted_builds=aborted_builds,
+            count_not_built=count_not_built, not_built_builds=not_built_builds,
+            count_unstable=count_unstable, unstable_builds=unstable_builds,
+            messages=[])
+
+
+        print "%d unstable builds sorted by start time:"%limit
+        for build, duration in sortByStartTime:
+          print build, duration
 
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):

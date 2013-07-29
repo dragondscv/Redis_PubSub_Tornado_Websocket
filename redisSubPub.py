@@ -1,5 +1,6 @@
 import redis
 import json
+from datetime import datetime
 
 class RedisSubPub():
 
@@ -90,37 +91,47 @@ class RedisSubPub():
         Sort functions
     """
 
+    "list builds sorted by metric"
+    def list_sorted_builds(self, limit, metric, desc=True, withscores=True):
+        temp = self._rc.zrange("sort:"+metric, 0, limit, desc, withscores)
+        data = []
+        for build, value in temp:
+            build_date = datetime.fromtimestamp(value/1000)
+            data.append((build, build_date))
+
+        return data
+
     "list builds sorted by duration"
     def list_builds_by_duration(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:build_time_in_millis", 0, limit, desc, withscores)
+        return self._rc.zrange("sort:build_duration", 0, limit, desc, withscores)
 
     "list builds sorted by scheduled time"
     def list_builds_by_time(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:build_time_in_millis", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "build_time_in_millis", desc, withscores)
 
     "list builds sorted by start time"
     def list_builds_by_start_time(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:build_start_time_in_millis", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "build_start_time_in_millis", desc, withscores)
 
     "list successful builds sorted by start time"
     def list_successful_builds(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:SUCCESS", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "SUCCESS", desc, withscores)
 
     "list failed builds sorted by start time"
     def list_failed_builds(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:FAILURE", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "FAILURE", desc, withscores)
 
     "list aborted builds sorted by start time"
     def list_aborted_builds(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:ABORTED", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "ABORTED", desc, withscores)
 
     "list not built builds sorted by start time"
     def list_not_built_builds(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:NOT_BUILT", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "NOT_BUILT", desc, withscores)
 
     "list unstable builds sorted by start time"
     def list_unstable_builds(self, limit, desc=True, withscores=True):
-        return self._rc.zrange("sort:UNSTABLE", 0, limit, desc, withscores)
+        return self.list_sorted_builds(limit, "UNSTABLE", desc, withscores)
 
 
 
@@ -155,11 +166,11 @@ class RedisSubPub():
     def count_unstable_builds(self):
         return self._rc.zcard("sort:UNSTABLE")
 
-    # not implemented yet because python client does not support this command
-    def count_active_channels(self):
-        pass
-
-
+    # not implemented yet because it is only supported since Redis 2.8
+    # will implement it after Redis 2.8.0-rc1 becomes official
+    "Count active channels. Active channels are those subscribed by users."
+    def count_active_channels(self, pattern):
+        return self._pubsub.execute_command("PUBSUB CHANNELS", pattern)
 
 
     """

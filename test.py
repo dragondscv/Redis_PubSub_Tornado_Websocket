@@ -42,8 +42,6 @@ def main():
       print key
       print value
     
-    print "there are active channels:"
-    print rsp.count_active_channels
 
     limit = 50
     sortByDuration = rsp.list_builds_by_duration(limit)
