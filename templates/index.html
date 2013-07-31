@@ -88,7 +88,7 @@
       <h2>{{ count_successful }} successful builds</h1>
       <table border=1>
         <tr>
-          <td>build name</td><td>start time</td>
+          <td>build name</td><td>scheduled time</td>
         </tr>
         {% for build, duration in successful_builds%}
         <tr>
@@ -101,7 +101,7 @@
       <h2>{{ count_failed }} failed builds</h1>
       <table border=1>
         <tr>
-          <td>build name</td><td>start time</td>
+          <td>build name</td><td>scheduled time</td>
         </tr>
         {% for build, duration in failed_builds%}
         <tr>
@@ -114,7 +114,7 @@
       <h2>{{ count_aborted}} aborted builds</h1>
       <table border=1>
         <tr>
-          <td>build name</td><td>start time</td>
+          <td>build name</td><td>scheduled time</td>
         </tr>
         {% for build, duration in aborted_builds%}
         <tr>
@@ -127,7 +127,7 @@
       <h2>{{ count_not_built }} not built builds</h1>
       <table border=1>
         <tr>
-          <td>build name</td><td>start time</td>
+          <td>build name</td><td>scheduled time</td>
         </tr>
         {% for build, duration in not_built_builds%}
         <tr>
@@ -141,7 +141,7 @@
       <h2>{{ count_unstable }} unstable builds</h1>
       <table border=1>
         <tr>
-          <td>build name</td><td>start time</td>
+          <td>build name</td><td>scheduled time</td>
         </tr>
         {% for build, duration in unstable_builds%}
         <tr>

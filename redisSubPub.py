@@ -109,27 +109,27 @@ class RedisSubPub():
     def list_builds_by_time(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "build_time_in_millis", desc, withscores)
 
-    "list builds sorted by start time"
+    "list builds sorted by scheduled time"
     def list_builds_by_start_time(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "build_start_time_in_millis", desc, withscores)
 
-    "list successful builds sorted by start time"
+    "list successful builds sorted by scheduled time"
     def list_successful_builds(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "SUCCESS", desc, withscores)
 
-    "list failed builds sorted by start time"
+    "list failed builds sorted by scheduled time"
     def list_failed_builds(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "FAILURE", desc, withscores)
 
-    "list aborted builds sorted by start time"
+    "list aborted builds sorted by scheduled time"
     def list_aborted_builds(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "ABORTED", desc, withscores)
 
-    "list not built builds sorted by start time"
+    "list not built builds sorted by scheduled time"
     def list_not_built_builds(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "NOT_BUILT", desc, withscores)
 
-    "list unstable builds sorted by start time"
+    "list unstable builds sorted by scheduled time"
     def list_unstable_builds(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "UNSTABLE", desc, withscores)
 
