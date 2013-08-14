@@ -2,6 +2,31 @@
    "db_version" : 1,
    "versions" : [
       {
+         "changes" : [
+            {
+               "author" : "lctung",
+               "msg" : "Update redisSubPub yicf file for packaging.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "redisPubSub/pkg/redisSubPub.yicf"
+                  }
+               ],
+               "rev" : "c08fc4a109ce017563f9eed1d428b7e4e255d392",
+               "time" : "2013-08-14T15:19:33Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/jenkins_plugin_eventnotification.git",
+            "revision" : "c08fc4a109ce017563f9eed1d428b7e4e255d392"
+         },
+         "time_created" : "2013-08-14T22:20:53Z",
+         "version" : "0.2.0.1"
+      },
+      {
          "changes" : [],
          "comments" : [],
          "scm_info" : {
