@@ -3,10 +3,52 @@
    "versions" : [
       {
          "changes" : [],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/jenkins_plugin_eventnotification.git",
+            "revision" : "d39b29e9cd283d422850ff4efc840d4669c0aaba"
+         },
+         "time_created" : "2013-08-14T21:16:52Z",
+         "version" : "0.2.0"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
+               "msg" : "Modify README files",
+               "paths" : [
+                  {
+                     "action" : "A",
+                     "path" : "notification-plugin/README.md"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "redisPubSub/README.md"
+                  }
+               ],
+               "rev" : "ea1fad57356c3d249a158d7329bd31aa78e582b6",
+               "time" : "2013-07-25T15:00:37Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/jenkins_plugin_eventnotification.git",
+            "revision" : "d39b29e9cd283d422850ff4efc840d4669c0aaba"
+         },
+         "time_created" : "2013-08-14T21:15:41Z",
+         "version" : "0.1.0"
+      },
+      {
+         "changes" : [],
          "comments" : [
             "Initial version"
          ],
-         "time_created" : "2013-08-14T20:58:37Z",
+         "scm_info" : {},
+         "time_created" : "2013-08-14T21:10:24Z",
          "version" : "0.0.0.0"
       }
    ]
