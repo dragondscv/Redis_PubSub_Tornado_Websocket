@@ -1,0 +1,13 @@
+{
+   "db_version" : 1,
+   "versions" : [
+      {
+         "changes" : [],
+         "comments" : [
+            "Initial version"
+         ],
+         "time_created" : "2013-08-14T20:58:37Z",
+         "version" : "0.0.0.0"
+      }
+   ]
+}

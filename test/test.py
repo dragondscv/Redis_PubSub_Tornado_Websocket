@@ -1,7 +1,9 @@
-from redisSubPub import RedisSubPub
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../lib'))
+from redisPubSub import RedisPubSub
 import threading
 
-rsp = RedisSubPub()
+rsp = RedisPubSub()
 
 def main():
     "list all channels"
@@ -41,7 +43,7 @@ def main():
     for key, value in builds.items():
       print key
       print value
-    
+
 
     limit = 50
     sortByDuration = rsp.list_builds_by_duration(limit)

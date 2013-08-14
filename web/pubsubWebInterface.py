@@ -1,18 +1,4 @@
-#!/usr/bin/env python
-#
-# Copyright 2009 Facebook
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may
-# not use this file except in compliance with the License. You may obtain
-# a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
+#!/home/y/bin/python2.6
 
 from functools import partial
 import types
@@ -26,7 +12,11 @@ import redis
 import threading
 import os.path
 import json
-from redisSubPub import RedisSubPub
+import uuid
+
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../lib'))
+from redisPubSub import RedisPubSub
 
 from tornado.options import define, options
 
@@ -46,7 +36,7 @@ settings = dict(
 
 LISTENERS = []
 
-rsp = RedisSubPub()
+rsp = RedisPubSub()
 
 
 def sub_listener():
@@ -55,10 +45,11 @@ def sub_listener():
     # do not remove this line
     channel_name = "test"
     rsp.subscribe(channel_name)
-    
+
     io_loop = tornado.ioloop.IOLoop.instance()
     for message in rsp.listen():
         print("get a message.")
+        print LISTENERS
         for element in LISTENERS:
             print("send to listeners.")
             io_loop.add_callback(partial(element.on_message, message))
@@ -97,6 +88,15 @@ class MainHandler(tornado.web.RequestHandler):
             self.write(json_)
 
     def get(self):
+
+        print("start thread...");
+        redisThread = threading.Thread(target=sub_listener)
+        redisThread.daemon = True
+        redisThread.start()
+        print redisThread
+        print redisThread.isAlive()
+
+
         slaves = rsp.get_all()
         #print(slaves)
 
@@ -134,9 +134,11 @@ class MainHandler(tornado.web.RequestHandler):
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
+        self.id = uuid.uuid4()
         print("open websocket and add listener...")
         LISTENERS.append(self)
- 
+        print LISTENERS
+
     def on_message(self, message):
         print("got message %r", message)
         if (type(message['data']) != types.LongType ):
@@ -145,15 +147,15 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
           json_['channel_name'] = channel_name
           html = self.render_string("message.html", data=json_)
           self.write_message(html)
- 
+
     def on_close(self):
         print("close listeners...")
         LISTENERS.remove(self)
+        print LISTENERS
 
 
 def main():
     print("start server...");
-
 
     tornado.options.parse_command_line()
     application = tornado.web.Application([
@@ -163,13 +165,6 @@ def main():
         (r'/unsubscribe', MainHandler),
     ], **settings)
 
-
-    print("start thread...");
-    redisThread = threading.Thread(target=sub_listener)
-    redisThread.daemon = True
-    redisThread.start()
-    print redisThread
-    print redisThread.isAlive()
 
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(options.port)

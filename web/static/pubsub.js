@@ -1,5 +1,5 @@
 $(document).ready(function(){
-   
+
   function createWebSocket() {
     if (WebSocket) {
       var ws = new WebSocket("ws://" + location.host+ "/realtime");

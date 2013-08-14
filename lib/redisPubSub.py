@@ -2,7 +2,7 @@ import redis
 import json
 from datetime import datetime
 
-class RedisSubPub():
+class RedisPubSub():
 
     def __init__(self, host='localhost', port=6379):
       self._rc = redis.StrictRedis(host, port, db=0)

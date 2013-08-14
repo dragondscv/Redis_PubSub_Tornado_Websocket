@@ -1,7 +1,10 @@
-from redisSubPub import RedisSubPub
+#!/home/y/bin/python2.6
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../lib'))
+from redisPubSub import RedisPubSub
 
 def main():
-    rsp = RedisSubPub()
+    rsp = RedisPubSub()
     channel_name = raw_input("Enter channel name to which you want to publish messages: ")
 
     var = 1
