@@ -8,7 +8,7 @@ YINST bug-component General
 
 CUSTODIAN = "$(PACKAGE_OWNER_EMAIL) $(PACKAGE_DOCUMENTATION)"
 #VERSION = `get_changelog_version CHANGELOG`
-VERSION = `if [ -f .pkg_meta ]; then pkg_meta version; else get_changelog_version CHANGELOG; fi`
+VERSION = `if [ -f .*.pkg_meta ]; then pkg_meta version; else get_changelog_version CHANGELOG; fi`
 
 LONG_DESC = `cat CHANGELOG`
 SRCDIRS = "../"
@@ -25,9 +25,10 @@ GROUP = wheel
 # YINST DEPENDENCIES AND CONFLICTS
 #--------------------------------------------------------
 
-YINST requires pkg redis_y 2.6.14 *
-YINST requires pkg ypython26_redis-2.7.2 *
-YINST requires pkg ypython26_tornado-2.2 *
+YINST requires pkg ypython26 *
+YINST requires pkg redis_y 2.6.2 *
+YINST requires pkg ypython26_redis 2.6.2 *
+YINST requires pkg ypython26_tornado 2.2 *
 
 #--------------------------------------------------------
 # YINST SETTINGS
@@ -37,5 +38,5 @@ YINST requires pkg ypython26_tornado-2.2 *
 # DIRECTORIES AND FILES
 #--------------------------------------------------------
 
-find - - - share/redisPubSub . -name "*" -type f
+find - - - share/redisPubSub/ ../ \( -name pkg -prune \) -o -name "*" -type f
 
