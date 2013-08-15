@@ -1,0 +1,11 @@
+/target
+/work
+.settings/
+.project
+.classpath
+.idea
+*.iml
+.*.swp
+*.pyc
+*.tgz
+rhel*
