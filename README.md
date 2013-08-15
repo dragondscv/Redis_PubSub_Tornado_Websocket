@@ -1,5 +1,5 @@
-jenkins_plugin_eventnotification
-================================
+eventstream_redis_python_pubsub
+===============================
 
 Files:
 
@@ -34,4 +34,3 @@ Usage:
   4. Alternatively you can try to build a job on Jenkins master and run subscriber.py. 
     You should receive event messages from subscriber by subscribing to correct job name 
     (e.g., subscribing to '*' and you will receive everything).
-
