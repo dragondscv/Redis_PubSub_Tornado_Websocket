@@ -36,13 +36,13 @@ def main():
     for job in jobs:
       print job
 
-    print "The builds of %s are:"%job
-    host_name = job.split(':')[0]
-    job_name = job.split(':')[1]
-    builds = rsp.get_builds(host_name, job_name)
-    for key, value in builds.items():
-      print key
-      print value
+      print "The builds of %s are:"%job
+      host_name = job.split(':')[0]
+      job_name = job.split(':')[1]
+      builds = rsp.get_builds(host_name, job_name)
+      for key, value in builds.items():
+        print key
+        print value
 
 
     limit = 50
