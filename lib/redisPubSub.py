@@ -34,7 +34,7 @@ class RedisPubSub():
     def get_jobs(self, host_name):
         jobs = self.get_all_jobs()
         results = []
-        
+
         for job_key in jobs:
             host_name_ = job_key.split(':')[0]
             if host_name_ == host_name:
@@ -57,6 +57,12 @@ class RedisPubSub():
 
         return results
 
+    "get a build belong to the host_name:job_name:build_number"
+    def get_build(self, host_name, job_name, build_number):
+        results = {}
+        build = self._rc.hgetall(host_name+":"+job_name+":"+build_number)
+
+        return build
 
     "return everything in database"
     def get_all(self):
@@ -79,7 +85,7 @@ class RedisPubSub():
                     hashes[slave][job_name][build_no] = self._rc.hgetall(build_key)
 
         return hashes
-    
+
     "list all keys in database, for debug purpose"
     def list_all_keys(self):
         hashes = self._rc.keys()
@@ -93,22 +99,26 @@ class RedisPubSub():
 
     "list builds sorted by metric"
     def list_sorted_builds(self, limit, metric, desc=True, withscores=True):
+        limit = int(limit) - 1
         temp = self._rc.zrange("sort:"+metric, 0, limit, desc, withscores)
         data = []
         for build, value in temp:
-            build_date = datetime.fromtimestamp(value/1000)
+            # convert milli-seconds to seconds
+            build_date = str(datetime.fromtimestamp(value/1000))
             data.append((build, build_date))
 
         return data
 
     "list builds sorted by duration"
     def list_builds_by_duration(self, limit, desc=True, withscores=True):
+        limit = int(limit) - 1
         return self._rc.zrange("sort:build_duration", 0, limit, desc, withscores)
 
     "list builds sorted by scheduled time"
     def list_builds_by_time(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "build_time_in_millis", desc, withscores)
 
+    # not working yet because yhudson does not support scheduled time
     "list builds sorted by scheduled time"
     def list_builds_by_start_time(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "build_start_time_in_millis", desc, withscores)
@@ -187,7 +197,10 @@ class RedisPubSub():
         return self._pubsub.unsubscribe(channel_name)
 
     def punsubscribe(self, channel_pattern):
-        return self._pubsub.punsubscribe(channel_pattern)
+        if (channel_pattern is None):
+            return self._pubsub.punsubscribe()
+        else:
+            return self._pubsub.punsubscribe(channel_pattern)
 
     def listen(self):
         return self._pubsub.listen()
@@ -195,11 +208,13 @@ class RedisPubSub():
     def publish(self, channel, message):
         return self._rc.publish(channel, message)
 
+    def disconnect(self):
+        return self._rc.connection_pool.disconnect()
 
 
     """
       Return a pubsub instance that can be listened on.
-      It should not be called unless you want to manually managing the subscription and
+      It should not be called unless you want to manually manage the subscription and
       publishing.
     """
     def pubsub(self):

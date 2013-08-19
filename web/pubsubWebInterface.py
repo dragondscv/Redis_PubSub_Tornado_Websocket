@@ -1,26 +1,32 @@
 #!/home/y/bin/python2.6
 
-from functools import partial
+import collections
 import types
 import logging
+import redis
+import threading
+import os.path
+import sys
+import json
+import uuid
+import weakref
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.websocket
 import tornado.web
-import redis
-import threading
-import os.path
-import json
-import uuid
+from tornado.escape import json_encode
+from tornado.options import define, options
+from functools import partial
 
-import sys, os
+# import redis python pubsub library
 sys.path.append(os.path.join(os.path.dirname(__file__), '../lib'))
 from redisPubSub import RedisPubSub
 
-from tornado.options import define, options
 
-define("port", default=8888, help="run on the given port", type=int)
+define("webserver_port", default=8888, help="Web server port", type=int)
+define("redis_hostname", default="localhost", help="Redis host address")
+define("redis_port", default=6379, help="Redis host port")
 
 settings = dict(
             cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
@@ -34,43 +40,69 @@ settings = dict(
 #}
 
 
-LISTENERS = []
 
-rsp = RedisPubSub()
+class RedisPubSubThread(threading.Thread):
+    """
+    subscribes to a redis pubsub channel and routes
+    messages to subscribers
 
+    messages have this format
+    {'channel': ..., 'data': ...}
+    """
 
-def sub_listener():
+    def __init__(self, redis_hostname, redis_port, redis_password=None):
+        threading.Thread.__init__(self)
 
-    # subscribe to some test channel to keep this thread running
-    # do not remove this line
-    channel_name = "test"
-    rsp.subscribe(channel_name)
+        self.pubsub = RedisPubSub(
+            redis_hostname,
+            redis_port
+        )
+        self.subscriptions = collections.defaultdict()
 
-    io_loop = tornado.ioloop.IOLoop.instance()
-    for message in rsp.listen():
-        print("get a message.")
-        print LISTENERS
-        for element in LISTENERS:
-            print("send to listeners.")
-            io_loop.add_callback(partial(element.on_message, message))
+        # subscribe to dummy channel to make the thread alive
+        self.pubsub.subscribe("dummy")
+        print self.pubsub
+
+    def subscribe(self, channel, callback):
+        print "%s subscribe %s" %(self.pubsub, channel)
+        self.pubsub.psubscribe(channel)
+        self.subscriptions[channel] = callback
+
+    def unsubscribe(self, channel):
+        print "%s unsubscribe %s" %(self.pubsub, channel)
+        self.pubsub.punsubscribe(channel)
+        del self.subscriptions[channel]
+
+    def disconnect(self):
+        self.pubsub.unsubscribe("dummy")
+        self.pubsub.disconnect()
+
+    def notify(self, channel, data):
+        print "notify callback..."
+        #while True:
+        print self.subscriptions
+        try:
+            cb = self.subscriptions[channel]
+        except IndexError:
+            #break
+            pass
+
+        if isinstance(cb, (weakref.ref,)):
+            cb = cb()
+        if cb is not None:
+            cb(data, channel)
+
+    def run(self):
+        try:
+            for message in self.pubsub.listen():
+                print message
+                if message['type'] == 'message' or message['type'] == 'pmessage':
+                    self.notify(message['channel'], message['data'])
+        except Exception as e:
+            print e
 
 
 class MainHandler(tornado.web.RequestHandler):
-
-    def subscribe(self, channel_name):
-        print("subscribe channel "+channel_name)
-        print LISTENERS
-
-        rsp.psubscribe(channel_name)
-        rsp.publish(channel_name, "test");
-
-        for t in threading.enumerate():
-            print t
-
-    def unsubscribe(self, channel_name):
-        print("unsubscribe channel "+channel_name)
-        rsp.punsubscribe(channel_name)
-
     def post(self):
         channel_name = self.get_argument("channelName")
         func = self.get_argument("func")
@@ -88,70 +120,129 @@ class MainHandler(tornado.web.RequestHandler):
             self.write(json_)
 
     def get(self):
-
-        print("start thread...");
-        redisThread = threading.Thread(target=sub_listener)
-        redisThread.daemon = True
-        redisThread.start()
-        print redisThread
-        print redisThread.isAlive()
-
-
+        rsp = RedisPubSub()
         slaves = rsp.get_all()
-        #print(slaves)
+        self.render("home.html", slaves=slaves)
+        rsp.disconnect()
 
-        limit = 50
-        sortByDuration = rsp.list_builds_by_duration(limit)
-        sortByTime = rsp.list_builds_by_time(limit)
-        sortByStartTime = rsp.list_builds_by_start_time(limit)
-        count_successful = rsp.count_successful_builds()
-        successful_builds = rsp.list_successful_builds(limit)
-        count_failed = rsp.count_failed_builds()
-        failed_builds = rsp.list_failed_builds(limit)
-        count_aborted = rsp.count_aborted_builds()
-        aborted_builds = rsp.list_aborted_builds(limit)
-        count_not_built = rsp.count_not_built_builds()
-        not_built_builds = rsp.list_not_built_builds(limit)
-        count_unstable = rsp.count_unstable_builds()
-        unstable_builds = rsp.list_unstable_builds(limit)
-
-        self.render("index.html", slaves=slaves, limit=limit,
-            sortByDuration=sortByDuration,
-            sortByTime=sortByTime,
-            sortByStartTime=sortByStartTime,
-            count_successful=count_successful, successful_builds=successful_builds,
-            count_failed=count_failed, failed_builds=failed_builds,
-            count_aborted=count_aborted, aborted_builds=aborted_builds,
-            count_not_built=count_not_built, not_built_builds=not_built_builds,
-            count_unstable=count_unstable, unstable_builds=unstable_builds,
-            messages=[])
+class SubscribeHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("subscribe.html", messages=[]);
 
 
-        print "%d unstable builds sorted by start time:"%limit
-        for build, duration in sortByStartTime:
-          print build, duration
+"""
+  Web service of sorting.
+  Return json.
+"""
+class SortHandler(tornado.web.RequestHandler):
+    def get(self, sort_field, count, format=json):
+        method_to_call = "list_builds_by_"+sort_field
 
+        rsp = RedisPubSub()
+        builds = getattr(rsp, method_to_call)(count)
 
+        if (format == "json"):
+            self.write(json_encode(builds))
+        elif (format == "html"):
+            self.render("sort.html", count=count, sort_field=sort_field, limit=count, builds=builds)
+
+        rsp.disconnect()
+
+class GetByStatusHandler(tornado.web.RequestHandler):
+    def get(self, status, count, format=json):
+        method_to_call = "list_"+status+"_builds"
+
+        rsp = RedisPubSub()
+        builds = getattr(rsp, method_to_call)(count)
+
+        if (format == "json"):
+            self.write(json_encode(builds))
+        elif (format == "html"):
+            self.render("status.html", count=count, status=status, limit=count, builds=builds)
+
+        rsp.disconnect()
+
+class QueryHandler(tornado.web.RequestHandler):
+    def get(self, *args):
+        type = args[0]
+        format = args[1]
+        method_to_call = "get_all_"+type
+
+        rsp = RedisPubSub()
+        data = getattr(rsp, method_to_call)()
+        if (format == "json"):
+            self.write(json_encode(list(data)))
+        elif (format == "html"):
+            self.write("HTML format not support.")
+
+        rsp.disconnect()
+
+class GetHandler(tornado.web.RequestHandler):
+    def get(self, *args):
+        rsp = RedisPubSub()
+        length = len(args)
+        host = args[0]
+        format = args[length-1]
+        data = []
+
+        if (length == 2):
+            data = rsp.get_jobs(host)
+        elif (length == 3):
+            job = args[1]
+            data = rsp.get_builds(host, job)
+        elif (length == 4):
+            job = args[1]
+            build = args[2]
+            data = rsp.get_build(host, job, build)
+
+        if (format == "json"):
+            self.write(json_encode(data))
+        elif (format == "html"):
+            self.write("HTML format not support.")
+
+        rsp.disconnect()
+
+"""
+  Websocket handler.
+"""
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
+        # the id of the web socket
         self.id = uuid.uuid4()
-        print("open websocket and add listener...")
-        LISTENERS.append(self)
-        print LISTENERS
+        print"Open websocket %i" %(self.id)
 
-    def on_message(self, message):
-        print("got message %r", message)
-        if (type(message['data']) != types.LongType ):
-          channel_name = message['channel']
-          json_ = json.loads(message['data'])
-          json_['channel_name'] = channel_name
-          html = self.render_string("message.html", data=json_)
-          self.write_message(html)
+        #subscriptions[self.id] = {'id':self.id}
+        self.pubsubThread = RedisPubSubThread(
+            redis_hostname = options.redis_hostname,
+            redis_port     = options.redis_port
+        )
+        self.pubsubThread.daemon = True
+        self.pubsubThread.start()
+        print self.pubsubThread
+
+    def on_message(self, *args):
+        message = args[0]
+        print "Websocket %i got message %r" %(self.id, message)
+        print self.pubsubThread
+        json_ = json.loads(message)
+        print json_
+
+        if ('func' in json_):
+            if (json_['func'] == 'subscribe'):
+                self.pubsubThread.subscribe(json_['channelName'], self.on_message)
+            elif (json_['func'] == 'unsubscribe'):
+                self.pubsubThread.unsubscribe(json_['channelName'])
+
+        else:
+            json_['channel_name'] = args[1]
+            html = self.render_string("message.html", data=json_)
+            self.write_message(html)
+
 
     def on_close(self):
-        print("close listeners...")
-        LISTENERS.remove(self)
-        print LISTENERS
+        print "close web socket %i" %(self.id)
+        print "close redis pubsub thread %s" %(self.pubsubThread)
+        self.pubsubThread.disconnect()
 
 
 def main():
@@ -161,13 +252,20 @@ def main():
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r'/realtime', RealtimeHandler),
-        (r'/subscribe', MainHandler),
-        (r'/unsubscribe', MainHandler),
+        (r'/subscribe', SubscribeHandler),
+        (r'/sort/(.*)/([0-9]+)', SortHandler),
+        (r'/sort/(.*)/([0-9]+)/(.*)', SortHandler),
+        (r'/build/(.*)/([0-9]+)', GetByStatusHandler),
+        (r'/build/(.*)/([0-9]+)/(.*)', GetByStatusHandler),
+        (r'/(hosts|jobs|builds)/(json|html)', QueryHandler),
+        (r'/(.*)/(.*)/([0-9]+)/(json|html)', GetHandler),
+        (r'/(.*)/(.*)/(json|html)', GetHandler),
+        (r'/(.*)/(json|html)', GetHandler)
     ], **settings)
 
 
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(options.port)
+    http_server.listen(options.webserver_port)
     tornado.ioloop.IOLoop.instance().start()
 
 

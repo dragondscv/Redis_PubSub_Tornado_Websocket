@@ -1,31 +1,59 @@
-$(document).ready(function(){
+function appendSubscribedChannel($channelName, $websocket) {
+  var channelName = $channelName;
+  var unsubButton = $("<input type='button' value='unsubscribe'/>");
+  var channelDiv  = $("<div><span>"+channelName+"</span></div>");
 
-  function createWebSocket() {
-    if (WebSocket) {
-      var ws = new WebSocket("ws://" + location.host+ "/realtime");
+  channelDiv.append(unsubButton);
+  $("#channelList").append(channelDiv);
 
-      ws.onopen = function() {
-        console.log("open websocket.");
-      };
+  // add click event on unsubscribe button
+  unsubButton.click(function() {
+    console.log("unsubscribe "+channelName);
+    var self = this;
 
-      ws.onmessage = function (event) {
-          console.log("client receives new message.");
-          var message = event.data;
-          var node = $("<div>"+message+"</div>");
-          $("#eventstream").append(node);
-      };
+    //$websocket.close();
+    $websocket.send(JSON.stringify({'func': 'unsubscribe', 'channelName':channelName}));
 
-      ws.onclose = function() {
-        console.log("close websocket.");
-      };
-    }
-    else {
-      alert("WebSocket not supported.");
-    }
+    $(self).parent().remove();
+  });
+}
+
+function createWebSocket() {
+
+  if (WebSocket) {
+    var ws = new WebSocket("ws://" + location.host+ "/realtime");
+
+    ws.onopen = function() {
+      console.log("open websocket.");
+      //appendSubscribedChannel($channelName);
+    };
+
+    ws.onmessage = function (event) {
+        console.log("client receives new message.");
+        var message = event.data;
+        var node = $("<div>"+message+"</div>");
+        $("#eventstream").append(node);
+    };
+
+    ws.onclose = function() {
+      console.log("close websocket.");
+    };
+
+    return ws;
+
+  }
+  else {
+    alert("WebSocket not supported.");
+    return null;
   }
 
-  // create web socket after page is loaded
-  createWebSocket();
+}
+
+
+
+$(document).ready(function(){
+
+  var websocket = createWebSocket();
 
   function subHandler($data) {
     console.log($data);
@@ -34,6 +62,7 @@ $(document).ready(function(){
       var channelName = $data.channelName;
       var unsubButton = $("<input type='button' value='unsubscribe'/>");
       var channelDiv  = $("<div><span>"+channelName+"</span></div>");
+
 
       channelDiv.append(unsubButton);
       $("#channelList").append(channelDiv);
@@ -66,7 +95,11 @@ $(document).ready(function(){
   $("#subButton").click(function() {
     var channelName = $("#channelName").val();
 
-    $.post("/subscribe", {"func": "sub", "channelName": channelName}, subHandler, "json");
+    //$.post("/subscribe", {"func": "sub", "channelName": channelName}, subHandler, "json");
+    //var message = '{"func": "subscribe", "channelName": "'+channelName+'"}';
+    websocket.send(JSON.stringify({'func': 'subscribe', 'channelName':channelName}));
+    // TODO: append unsubscribe button after server side success
+    appendSubscribedChannel(channelName, websocket);
   })
 
 

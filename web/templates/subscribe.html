@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div id="subPanel">
+    <h2>Subscribe a channel</h2>
+    Supported glob-style patterns:                                          <br/>
+    h?llo matches hello, hallo and hxllo                                    <br/>
+    h*llo matches hllo and heeeello                                         <br/>
+    h[ae]llo matches hello and hallo, but not hillo                         <br/>
+    Use \ to escape special characters if you want to match them verbatim.  <br/>
+    <input type="text" id="channelName" value="notioncommotion.corp.gq1.yahoo.com:job1"
+    size="50">
+    <input type="button" value="subscribe" id="subButton">
+  </div>
+
+  <div id="channelList">
+    <h2>Subscribed Channels</h2>
+  </div>
+
+  <div id="eventstream">
+    <h2>Real-Time Event Notifications</h2>
+    {% for data in messages %}
+      {% include "message.html" %}
+    {% end %}
+  </div>
+{% end %}

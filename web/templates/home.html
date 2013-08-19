@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div>
+    <h2>All Passed Events</h1>
+    {% for slave, jobs in slaves.items() %}
+    <ul>
+      <li>{{ escape(slave) }}
+      {% for job, builds in jobs.items() %}
+        <ul>
+          <li>{{ escape(job) }}
+          {% for build_no, data in builds.items() %}
+          <ul>
+            <li>build-{{ escape(build_no) }}:<br>
+            status:{{ slaves[slave][job][build_no]['build_status'] }},
+            description: {{ slaves[slave][job][build_no]['build_description'] }},
+            start time: {{ slaves[slave][job][build_no]['build_time'] }},
+            duration: {{ slaves[slave][job][build_no]['build_duration'] }} ms</li>
+          </ul>
+          {% end %}
+          </li>
+        </ul>
+      {% end %}
+      </li>
+    </ul>
+    {% end %}
+  </div>
+{% end %}

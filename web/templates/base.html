@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<head>
+    <title>Event Stream Notifications</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="{{ static_url("pubsub.js") }}" type="text/javascript"></script></script>
+</head>
+<body>
+  <div id="header">
+    {% block header %}
+      <a href="/">home</a>
+      <a href="/subscribe">subsribe</a>
+      <a href="/sort/duration/50/html">sort by duration</a>
+      <a href="/sort/time/50/html">sort by time</a>
+      <a href="/build/successful/50/html">successful builds</a>
+      <a href="/build/failed/50/html">failed builds</a>
+      <a href="/build/aborted/50/html">aborted builds</a>
+      <a href="/build/not_built/50/html">not built builds</a>
+      <a href="/build/unstable/50/html">unstable builds</a>
+    {% end %}
+  </div>
+
+  <div id="content">
+    {% block content %}{% end %}
+  </div>
+
+  <div id="footer">
+    {% block footer %}{% end %}
+  </div>
+</body>
+</html>
+
