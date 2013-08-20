@@ -5,67 +5,118 @@
          "changes" : [
             {
                "author" : "lctung",
-               "msg" : "Update redisSubPub yicf file for packaging.",
-               "paths" : [
-                  {
-                     "action" : "M",
-                     "path" : "redisPubSub/pkg/redisSubPub.yicf"
-                  }
-               ],
-               "rev" : "c08fc4a109ce017563f9eed1d428b7e4e255d392",
-               "time" : "2013-08-14T15:19:33Z"
-            }
-         ],
-         "comments" : [],
-         "scm_info" : {
-            "branch" : "master",
-            "path" : "/",
-            "repo" : "git@git.corp.yahoo.com:Media/jenkins_plugin_eventnotification.git",
-            "revision" : "c08fc4a109ce017563f9eed1d428b7e4e255d392"
-         },
-         "time_created" : "2013-08-14T22:20:53Z",
-         "version" : "0.2.0.1"
-      },
-      {
-         "changes" : [],
-         "comments" : [],
-         "scm_info" : {
-            "branch" : "master",
-            "path" : "/",
-            "repo" : "git@git.corp.yahoo.com:Media/jenkins_plugin_eventnotification.git",
-            "revision" : "d39b29e9cd283d422850ff4efc840d4669c0aaba"
-         },
-         "time_created" : "2013-08-14T21:16:52Z",
-         "version" : "0.2.0"
-      },
-      {
-         "changes" : [
-            {
-               "author" : "lctung",
                "msg" : "Modify README files",
                "paths" : [
                   {
                      "action" : "A",
-                     "path" : "notification-plugin/README.md"
+                     "path" : "README.md"
+                  }
+               ],
+               "rev" : "6b295904d154ba747bf96d9260e5efb5dd25c00a",
+               "time" : "2013-07-25T15:00:37Z"
+            },
+            {
+               "author" : "shahar",
+               "msg" : "Initial commit",
+               "paths" : [
+                  {
+                     "action" : "A",
+                     "path" : "README.md"
+                  }
+               ],
+               "rev" : "cd310db92209558532093e9b06183243c90511b6",
+               "time" : "2013-08-15T17:40:01Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Commit .gitingore",
+               "paths" : [
+                  {
+                     "action" : "A",
+                     "path" : ".gitignore"
+                  }
+               ],
+               "rev" : "66f277dd5810b29dac40227f9a998d91153cdf66",
+               "time" : "2013-08-15T13:19:03Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "[Bug Fix] Fix test.py bug when no job in redis.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "test/test.py"
+                  }
+               ],
+               "rev" : "a88b45e8e6b60b43f59920ee2e8ad30787586bc9",
+               "time" : "2013-08-15T13:53:02Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Reorganize the page structure and implment web service.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/static/pubsub.js"
                   },
                   {
                      "action" : "A",
-                     "path" : "redisPubSub/README.md"
+                     "path" : "web/templates/base.html"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/templates/home.html"
+                  },
+                  {
+                     "action" : "D",
+                     "path" : "web/templates/index.html"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/templates/sort.html"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/templates/status.html"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/templates/subscribe.html"
                   }
                ],
-               "rev" : "ea1fad57356c3d249a158d7329bd31aa78e582b6",
-               "time" : "2013-07-25T15:00:37Z"
+               "rev" : "564457e2b2c61dac7c13b2b1a12165a77b3e6a3e",
+               "time" : "2013-08-19T16:48:01Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Update README.md",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "README.md"
+                  }
+               ],
+               "rev" : "141363e0c9a2abbad57fb98375eb23c1cd8ad5ea",
+               "time" : "2013-08-19T17:02:16Z"
             }
          ],
          "comments" : [],
          "scm_info" : {
             "branch" : "master",
             "path" : "/",
-            "repo" : "git@git.corp.yahoo.com:Media/jenkins_plugin_eventnotification.git",
-            "revision" : "d39b29e9cd283d422850ff4efc840d4669c0aaba"
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "141363e0c9a2abbad57fb98375eb23c1cd8ad5ea"
          },
-         "time_created" : "2013-08-14T21:15:41Z",
-         "version" : "0.1.0"
+         "time_created" : "2013-08-20T00:07:11Z",
+         "version" : "1.0.0"
       },
       {
          "changes" : [],
@@ -73,7 +124,7 @@
             "Initial version"
          ],
          "scm_info" : {},
-         "time_created" : "2013-08-14T21:10:24Z",
+         "time_created" : "2013-08-20T00:06:10Z",
          "version" : "0.0.0.0"
       }
    ]
