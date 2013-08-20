@@ -113,10 +113,10 @@
             "branch" : "master",
             "path" : "/",
             "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
-            "revision" : "141363e0c9a2abbad57fb98375eb23c1cd8ad5ea"
+            "revision" : "ad3338a3389fe1747a0933c25420945e0225cfb3"
          },
-         "time_created" : "2013-08-20T00:07:11Z",
-         "version" : "1.0.0"
+         "time_created" : "2013-08-20T00:08:02Z",
+         "version" : "0.1.0"
       },
       {
          "changes" : [],
@@ -124,7 +124,7 @@
             "Initial version"
          ],
          "scm_info" : {},
-         "time_created" : "2013-08-20T00:06:10Z",
+         "time_created" : "2013-08-20T00:07:02Z",
          "version" : "0.0.0.0"
       }
    ]
