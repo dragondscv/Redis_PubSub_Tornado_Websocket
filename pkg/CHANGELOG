@@ -1,4 +1,37 @@
 +--------------------------------------+
+| version 0.4.0 (2013-08-23T02:05:15Z) |
++--------------------------------------+------------------------------------
+Author: lctung
+Time: 2013-08-20 10:54:57
+
+Include javascript in subscribe.html to avoid open websocket for every page.
+
+   root: /web/templates
+changed: base.html, subscribe.html
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-08-21 10:53:37
+
+Parse test result to json for web service
+
+changed: lib/redisPubSub.py
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-08-22 19:04:23
+
+Add sort function by clicking on table header fields.
+
+changed: lib/redisPubSub.py, web/pubsubWebInterface.py,
+         web/static/pubsub.js, web/templates/base.html,
+         web/templates/home.html, web/templates/message.html,
+         web/templates/sort.html, web/templates/status.html,
+         web/templates/subscribe.html
+  added: web/static/asc.gif, web/static/desc.gif, web/static/main.css,
+         web/static/sort.js, web/templates/all_events_sorted.html
+----------------------------------------------------------------------------
+
+
++--------------------------------------+
 | version 0.3.0 (2013-08-20T00:09:13Z) |
 +--------------------------------------+------------------------------------
 No changes

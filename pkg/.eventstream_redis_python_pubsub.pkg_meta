@@ -2,6 +2,111 @@
    "db_version" : 1,
    "versions" : [
       {
+         "changes" : [
+            {
+               "author" : "lctung",
+               "msg" : "Include javascript in subscribe.html to avoid open websocket for every page.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/base.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/subscribe.html"
+                  }
+               ],
+               "rev" : "3b42c0bee13dd8821f9565a059ba0c23396a705f",
+               "time" : "2013-08-20T10:54:57Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Parse test result to json for web service",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  }
+               ],
+               "rev" : "65dedfacc80a0bfd88ba5512380ef4d2d2a19235",
+               "time" : "2013-08-21T10:53:37Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Add sort function by clicking on table header fields.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/static/asc.gif"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/static/desc.gif"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/static/main.css"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/static/pubsub.js"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/static/sort.js"
+                  },
+                  {
+                     "action" : "A",
+                     "path" : "web/templates/all_events_sorted.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/base.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/message.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/sort.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/status.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/subscribe.html"
+                  }
+               ],
+               "rev" : "981d3058a1e56b3904dc04b993c25f23717e5ec5",
+               "time" : "2013-08-22T19:04:23Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "981d3058a1e56b3904dc04b993c25f23717e5ec5"
+         },
+         "time_created" : "2013-08-23T02:05:15Z",
+         "version" : "0.4.0"
+      },
+      {
          "changes" : [],
          "comments" : [],
          "scm_info" : {
