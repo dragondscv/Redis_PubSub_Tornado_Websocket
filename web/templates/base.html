@@ -3,19 +3,26 @@
 <head>
     <title>Event Stream Notifications</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ static_url("main.css") }}">
 </head>
 <body>
   <div id="header">
     {% block header %}
-      <a href="/">home</a>
-      <a href="/subscribe">subsribe</a>
-      <a href="/sort/duration/50/html">sort by duration</a>
-      <a href="/sort/time/50/html">sort by time</a>
-      <a href="/build/successful/50/html">successful builds</a>
-      <a href="/build/failed/50/html">failed builds</a>
-      <a href="/build/aborted/50/html">aborted builds</a>
-      <a href="/build/not_built/50/html">not built builds</a>
-      <a href="/build/unstable/50/html">unstable builds</a>
+    <table>
+      <thead class="header_theader">
+        <tr>
+          <td><a href="/">home</a></td>
+          <td><a href="/subscribe">subsribe</a></td>
+          <td><a href="/sort/duration/50/html">sort by duration</a></td>
+          <td><a href="/sort/time/50/html">sort by time</a></td>
+          <td><a href="/build/successful/50/html">successful builds</a></td>
+          <td><a href="/build/failed/50/html">failed builds</a></td>
+          <td><a href="/build/aborted/50/html">aborted builds</a></td>
+          <td><a href="/build/not_built/50/html">not built builds</a></td>
+          <td><a href="/build/unstable/50/html">unstable builds</a></td>
+        </tr>
+      </thead>
+    </table>
     {% end %}
   </div>
 

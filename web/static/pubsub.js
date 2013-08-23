@@ -31,8 +31,8 @@ function createWebSocket() {
     ws.onmessage = function (event) {
         console.log("client receives new message.");
         var message = event.data;
-        var node = $("<div>"+message+"</div>");
-        $("#eventstream").append(node);
+        var node = $(message);
+        $("#eventstream>table>tbody").append(node);
     };
 
     ws.onclose = function() {
@@ -103,7 +103,4 @@ $(document).ready(function(){
   })
 
 
-
 });
-
-

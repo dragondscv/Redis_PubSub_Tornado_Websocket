@@ -1,0 +1,41 @@
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header_theader{
+  font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+  text-align: left;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sort_asc{
+  background-image: url(asc.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.sort_desc{
+  background-image: url(desc.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.event_theader{
+  cursor: pointer;
+  padding: 5px 20px 5px 10px;
+  background-color:#d0e4fe;
+  font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+  text-align: left;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.event_tbody {
+  padding: 5px 20px 5px 10px;
+  font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+  text-align: left;
+  font-size: 12px;
+}

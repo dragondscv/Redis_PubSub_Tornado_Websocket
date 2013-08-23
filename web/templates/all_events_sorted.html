@@ -1,0 +1,15 @@
+
+      <tbody class="event_tbody">
+      {% for build in builds %}
+        <tr>
+          <td>{{ build['host_name'] }}</td>
+          <td>{{ build['job_name'] }}</td>
+          <td>{{ build['build_number'] }}</td>
+          <td>{{ build['build_status'] }}</td>
+          <td>{{ build['build_description'] }}</td>
+          <td>{{ build['build_time'] }}</td>
+          <td>{{ build['build_duration'] }} ms</td>
+        </tr>
+      {% end %}
+      </tbody>
+

@@ -104,25 +104,22 @@ class RedisPubSubThread(threading.Thread):
 
 class MainHandler(tornado.web.RequestHandler):
     def post(self):
-        channel_name = self.get_argument("channelName")
-        func = self.get_argument("func")
+        pass
 
-        if (func == "sub"):
-            self.subscribe(channel_name)
-            results = {"status": "success", "channelName": channel_name}
-            json_ = tornado.escape.json_encode(results)
-            self.write(json_)
-
-        elif (func == "unsub"):
-            self.unsubscribe(channel_name)
-            results = {"status": "success"}
-            json_ = tornado.escape.json_encode(results)
-            self.write(json_)
-
-    def get(self):
+    def get(self, *args):
         rsp = RedisPubSub()
-        slaves = rsp.get_all()
-        self.render("home.html", slaves=slaves)
+        field = "build_time_in_millis"
+
+        if (len(args) == 2 and args[0] != ""):
+            field = args[0]
+            reverse = args[1] == "True"
+            builds = rsp.get_all_sorted(field, reverse)
+            html = self.render_string("all_events_sorted.html", builds=builds)
+            self.write(html)
+        else:
+            builds = rsp.get_all_sorted(field, False)
+            self.render("home.html", builds=builds)
+
         rsp.disconnect()
 
 class SubscribeHandler(tornado.web.RequestHandler):
@@ -235,7 +232,7 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
 
         else:
             json_['channel_name'] = args[1]
-            html = self.render_string("message.html", data=json_)
+            html = self.render_string("message.html", build=json_)
             self.write_message(html)
 
 
@@ -250,7 +247,6 @@ def main():
 
     tornado.options.parse_command_line()
     application = tornado.web.Application([
-        (r"/", MainHandler),
         (r'/realtime', RealtimeHandler),
         (r'/subscribe', SubscribeHandler),
         (r'/sort/(.*)/([0-9]+)', SortHandler),
@@ -260,7 +256,9 @@ def main():
         (r'/(hosts|jobs|builds)/(json|html)', QueryHandler),
         (r'/(.*)/(.*)/([0-9]+)/(json|html)', GetHandler),
         (r'/(.*)/(.*)/(json|html)', GetHandler),
-        (r'/(.*)/(json|html)', GetHandler)
+        (r'/(.*)/(json|html)', GetHandler),
+        (r'/(.*)/(True|False)', MainHandler),
+        (r'/', MainHandler)
     ], **settings)
 
 

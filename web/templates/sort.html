@@ -3,14 +3,18 @@
 {% block content %}
     <div>
       <h2>{{ count }} builds sorted by {{ sort_field }}</h2>
-      <table border=1>
-        <tr>
-          <td>build name</td><td>{{ sort_field }}</td>
-        </tr>
+      <table>
+        <thead class="event_theader">
+          <tr>
+            <td>build name</td><td>{{ sort_field }}</td>
+          </tr>
+        </thead>
         {% for build, value in builds%}
-        <tr>
-          <td>{{ build}}</td><td>{{ value }}</td>
-        </tr>
+        <tbody class="event_tbody">
+          <tr>
+            <td>{{ build}}</td><td>{{ value }}</td>
+          </tr>
+        </tbody>
       {% end %}
       </table>
     </div>

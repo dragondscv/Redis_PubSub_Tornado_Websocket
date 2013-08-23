@@ -1,5 +1,6 @@
 import redis
 import json
+from operator import itemgetter, attrgetter 
 from datetime import datetime
 
 class RedisPubSub():
@@ -88,6 +89,20 @@ class RedisPubSub():
                     hashes[slave][job_name][build_no] = self._rc.hgetall(build_key)
 
         return hashes
+
+    "return everything sorted based on certain field"
+    def get_all_sorted(self, field, reverse=False):
+        # get all builds
+        build_names = self._rc.smembers("builds")
+        builds = []
+
+        for build_name in build_names:
+            build = self._rc.hgetall(build_name)
+            # convert string to int
+            build['build_number'] = int(build['build_number'])
+            builds.append(build)
+
+        return sorted(builds, key=itemgetter(field), reverse=reverse)
 
     "list all keys in database, for debug purpose"
     def list_all_keys(self):

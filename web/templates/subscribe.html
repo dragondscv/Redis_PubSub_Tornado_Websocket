@@ -20,8 +20,24 @@
 
   <div id="eventstream">
     <h2>Real-Time Event Notifications</h2>
-    {% for data in messages %}
-      {% include "message.html" %}
-    {% end %}
+    <table>
+      <thead class="event_theader">
+        <tr>
+          <td id="host_name" width="250">host</td>
+          <td id="job_name" width="80">job name</td>
+          <td id="build_number" width="100">build number</td>
+          <td id="build_status" width="100">status</td>
+          <td id="build_description" width="100">description</td>
+          <td id="build_time" width="200">time</td>
+          <td id="build_duration" width="100">duration</td>
+        </tr>
+      </thead>
+
+      <tbody class="event_tbody">
+      {% for build in messages %}
+        {% include "message.html" %}
+      {% end %}
+      </tbody>
+    </table>
   </div>
 {% end %}
