@@ -117,7 +117,7 @@ class MainHandler(tornado.web.RequestHandler):
             html = self.render_string("all_events_sorted.html", builds=builds)
             self.write(html)
         else:
-            builds = rsp.get_all_sorted(field, False)
+            builds = rsp.get_all_sorted(field, True)
             self.render("home.html", builds=builds)
 
         rsp.disconnect()
