@@ -1,3 +1,23 @@
++----------------------------------------+
+| version 0.4.0.1 (2013-08-26T21:27:51Z) |
++----------------------------------------+----------------------------------
+Author: lctung
+Time: 2013-08-26 14:26:07
+
+Handle description containing html tags.
+
+changed: web/templates/all_events_sorted.html
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-08-26 14:27:08
+
+Fixed the bug of sorting builds based on time. Use time in milliseconds to
+sort.
+
+changed: lib/redisPubSub.py, web/templates/home.html
+----------------------------------------------------------------------------
+
+
 +--------------------------------------+
 | version 0.4.0 (2013-08-23T02:05:15Z) |
 +--------------------------------------+------------------------------------

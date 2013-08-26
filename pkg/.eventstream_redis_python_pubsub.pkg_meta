@@ -5,6 +5,47 @@
          "changes" : [
             {
                "author" : "lctung",
+               "msg" : "Handle description containing html tags.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/all_events_sorted.html"
+                  }
+               ],
+               "rev" : "93f2cef635ad28d025f64486db8e09c9060870ad",
+               "time" : "2013-08-26T14:26:07Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Fixed the bug of sorting builds based on time. Use time in milliseconds to sort.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  }
+               ],
+               "rev" : "b0918ece319d5c49651fa21e1adf1455d101f5d5",
+               "time" : "2013-08-26T14:27:08Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "b0918ece319d5c49651fa21e1adf1455d101f5d5"
+         },
+         "time_created" : "2013-08-26T21:27:51Z",
+         "version" : "0.4.0.1"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
                "msg" : "Include javascript in subscribe.html to avoid open websocket for every page.",
                "paths" : [
                   {
