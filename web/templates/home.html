@@ -3,7 +3,7 @@
 {% block content %}
   <script src="{{ static_url("sort.js") }}" type="text/javascript"></script></script>
   <div>
-    <h2>All Passed Events</h1>
+    <h2>All Events</h1>
     <table id="passed_events">
       <thead class="event_theader">
         <tr>
@@ -12,23 +12,11 @@
           <td id="build_number" width="100">build number</td>
           <td id="build_status" width="100">status</td>
           <td id="build_description" width="100">description</td>
-          <td id="build_time" width="200">time</td>
+          <td id="build_time_in_millis" width="200">time</td>
           <td id="build_duration" width="100">duration</td>
         </tr>
       </thead>
-      <tbody class="event_tbody">
-      {% for build in builds %}
-        <tr>
-          <td>{{ build['host_name'] }}</td>
-          <td>{{ build['job_name'] }}</td>
-          <td>{{ build['build_number'] }}</td>
-          <td>{{ build['build_status'] }}</td>
-          <td>{{ build['build_description'] }}</td>
-          <td>{{ build['build_time'] }}</td>
-          <td>{{ build['build_duration'] }} ms</td>
-        </tr>
-      {% end %}
-      </tbody>
+      {% include "all_events_sorted.html" %}
     </table>
   </div>
 {% end %}

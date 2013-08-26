@@ -100,6 +100,7 @@ class RedisPubSub():
             build = self._rc.hgetall(build_name)
             # convert string to int
             build['build_number'] = int(build['build_number'])
+            build['build_time_in_millis'] = int(build['build_time_in_millis'])
             builds.append(build)
 
         return sorted(builds, key=itemgetter(field), reverse=reverse)
