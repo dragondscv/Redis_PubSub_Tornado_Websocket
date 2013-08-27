@@ -9,6 +9,9 @@
           <td>{% raw build['build_description'] %}</td>
           <td>{{ build['build_time'] }}</td>
           <td>{{ build['build_duration'] }} ms</td>
+          <td>{{ build['started_by'] }}</td>
+          <td>{{ build['upstream_job_name'] }}</td>
+          <td>{{ build['upstream_build_number'] }}</td>
         </tr>
       {% end %}
       </tbody>
