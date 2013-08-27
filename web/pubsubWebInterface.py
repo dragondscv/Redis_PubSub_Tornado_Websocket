@@ -39,6 +39,9 @@ settings = dict(
 #  'auto_reload': True,
 #}
 
+response_format = ['json', 'html']
+response_format_string = '('+'|'.join(response_format)+')'
+
 
 
 class RedisPubSubThread(threading.Thread):
@@ -110,7 +113,7 @@ class MainHandler(tornado.web.RequestHandler):
         rsp = RedisPubSub()
         field = "build_time_in_millis"
 
-        if (len(args) == 2 and args[0] != ""):
+        if (len(args) == 2 and args[0]):
             field = args[0]
             reverse = args[1] == "True"
             builds = rsp.get_all_sorted(field, reverse)
@@ -215,7 +218,6 @@ class RealtimeHandler(tornado.websocket.WebSocketHandler):
         )
         self.pubsubThread.daemon = True
         self.pubsubThread.start()
-        print self.pubsubThread
 
     def on_message(self, *args):
         message = args[0]
@@ -249,14 +251,12 @@ def main():
     application = tornado.web.Application([
         (r'/realtime', RealtimeHandler),
         (r'/subscribe', SubscribeHandler),
-        (r'/sort/(.*)/([0-9]+)', SortHandler),
-        (r'/sort/(.*)/([0-9]+)/(.*)', SortHandler),
-        (r'/build/(.*)/([0-9]+)', GetByStatusHandler),
-        (r'/build/(.*)/([0-9]+)/(.*)', GetByStatusHandler),
-        (r'/(hosts|jobs|builds)/(json|html)', QueryHandler),
-        (r'/(.*)/(.*)/([0-9]+)/(json|html)', GetHandler),
-        (r'/(.*)/(.*)/(json|html)', GetHandler),
-        (r'/(.*)/(json|html)', GetHandler),
+        (r'/sort/(.*)/([0-9]+)/'+response_format_string, SortHandler),
+        (r'/build/(.*)/([0-9]+)/'+response_format_string, GetByStatusHandler),
+        (r'/(hosts|jobs|builds)/'+response_format_string, QueryHandler),
+        (r'/(.*)/(.*)/([0-9]+)/'+response_format_string, GetHandler),
+        (r'/(.*)/(.*)/'+response_format_string, GetHandler),
+        (r'/(.*)/'+response_format_string, GetHandler),
         (r'/(.*)/(True|False)', MainHandler),
         (r'/', MainHandler)
     ], **settings)

@@ -61,8 +61,9 @@ class RedisPubSub():
     "get a build belong to the host_name:job_name:build_number"
     def get_build(self, host_name, job_name, build_number):
         build = self._rc.hgetall(host_name+":"+job_name+":"+build_number)
+        print build
 
-        if ('test_result' in build):
+        if ('test_result' in build and build['test_result']):
             test_data = json.loads(build['test_result']);
             build['test_result'] = test_data
 
