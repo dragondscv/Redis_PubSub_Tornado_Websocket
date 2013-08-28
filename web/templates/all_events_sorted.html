@@ -2,16 +2,16 @@
       <tbody class="event_tbody">
       {% for build in builds %}
         <tr>
-          <td>{{ build['host_name'] }}</td>
-          <td>{{ build['job_name'] }}</td>
-          <td>{{ build['build_number'] }}</td>
-          <td>{{ build['build_status'] }}</td>
-          <td>{% raw build['build_description'] %}</td>
-          <td>{{ build['build_time'] }}</td>
-          <td>{{ build['build_duration'] }} ms</td>
-          <td>{{ build['started_by'] }}</td>
-          <td>{{ build['upstream_job_name'] }}</td>
-          <td>{{ build['upstream_build_number'] }}</td>
+          <td>{% if 'host_name' in build %} {{ build['host_name'] }} {% end %}</td>
+          <td>{% if 'job_name' in build %} {{ build['job_name'] }} {% end %}</td>
+          <td>{% if 'build_number' in build %} {{ build['build_number'] }} {% end %}</td>
+          <td>{% if 'build_status' in build %} {{ build['build_status'] }} {% end %}</td>
+          <td>{% if 'build_description' in build %} {% raw build['build_description'] %} {% end %}</td>
+          <td>{% if 'build_time' in build %} {{ build['build_time'] }} {% end %}</td>
+          <td>{% if 'build_duration' in build %} {{ build['build_duration'] }} ms {% end %}</td>
+          <td>{% if 'started_by' in build %} {{ build['started_by'] }} {% end %}</td>
+          <td>{% if 'upstream_job_name' in build %} {{ build['upstream_job_name'] }} {% end %}</td>
+          <td>{% if 'upstream_build_number' in build %} {{ build['upstream_build_number'] }} {% end %}</td>
         </tr>
       {% end %}
       </tbody>
