@@ -1,4 +1,39 @@
 +----------------------------------------+
+| version 0.4.0.2 (2013-08-28T00:49:21Z) |
++----------------------------------------+----------------------------------
+Author: lctung
+Time: 2013-08-26 14:47:18
+
+Fixed the bug of sorting based on build duration. Convert string to int for
+build_duration.
+
+changed: lib/redisPubSub.py
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-08-26 14:47:57
+
+Sort based on time in milliseconds in descending order by default.
+
+changed: web/pubsubWebInterface.py
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-08-27 16:13:13
+
+Add upstream information
+
+   root: /web/templates
+changed: all_events_sorted.html, home.html
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-08-27 16:14:12
+
+define response_format_string = ['json', 'html']
+
+changed: lib/redisPubSub.py, web/pubsubWebInterface.py
+----------------------------------------------------------------------------
+
+
++----------------------------------------+
 | version 0.4.0.1 (2013-08-26T21:27:51Z) |
 +----------------------------------------+----------------------------------
 Author: lctung

@@ -5,6 +5,75 @@
          "changes" : [
             {
                "author" : "lctung",
+               "msg" : "Fixed the bug of sorting based on build duration. Convert string to int for build_duration.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  }
+               ],
+               "rev" : "d99a7d845c07ae6616b37564dc2cba73f34627f5",
+               "time" : "2013-08-26T14:47:18Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Sort based on time in milliseconds in descending order by default.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  }
+               ],
+               "rev" : "5c441a2a452ac26bb45b87b664138c099f0dec9d",
+               "time" : "2013-08-26T14:47:57Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Add upstream information",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/all_events_sorted.html"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  }
+               ],
+               "rev" : "83c5a30042d4bdf8c075f752826972a8a102e92c",
+               "time" : "2013-08-27T16:13:13Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "define response_format_string = ['json', 'html']",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  }
+               ],
+               "rev" : "08e2c14094ca8dc5644e5d1f964c6381646a5904",
+               "time" : "2013-08-27T16:14:12Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "08e2c14094ca8dc5644e5d1f964c6381646a5904"
+         },
+         "time_created" : "2013-08-28T00:49:21Z",
+         "version" : "0.4.0.2"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
                "msg" : "Handle description containing html tags.",
                "paths" : [
                   {
