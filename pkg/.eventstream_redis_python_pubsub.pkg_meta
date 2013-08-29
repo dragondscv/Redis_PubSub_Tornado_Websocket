@@ -5,6 +5,35 @@
          "changes" : [
             {
                "author" : "lctung",
+               "msg" : "Handle null records.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/all_events_sorted.html"
+                  }
+               ],
+               "rev" : "569944ee5f23cd4f3ec64b077ae0416dd1ab498c",
+               "time" : "2013-08-28T12:13:07Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "569944ee5f23cd4f3ec64b077ae0416dd1ab498c"
+         },
+         "time_created" : "2013-08-29T00:18:12Z",
+         "version" : "0.4.0.3"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
                "msg" : "Fixed the bug of sorting based on build duration. Convert string to int for build_duration.",
                "paths" : [
                   {
