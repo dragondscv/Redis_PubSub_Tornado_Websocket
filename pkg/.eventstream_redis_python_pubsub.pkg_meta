@@ -5,6 +5,43 @@
          "changes" : [
             {
                "author" : "lctung",
+               "msg" : "Add age/host filters",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/static/sort.js"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  }
+               ],
+               "rev" : "1b8338ef3639528feafa09b14ce513694fb4ab6d",
+               "time" : "2013-08-29T17:04:53Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "1b8338ef3639528feafa09b14ce513694fb4ab6d"
+         },
+         "time_created" : "2013-08-30T16:56:19Z",
+         "version" : "0.4.0.4"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
                "msg" : "Handle null records.",
                "paths" : [
                   {
