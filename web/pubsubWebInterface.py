@@ -120,8 +120,9 @@ class MainHandler(tornado.web.RequestHandler):
             html = self.render_string("all_events_sorted.html", builds=builds)
             self.write(html)
         else:
+            hosts = rsp.get_all_hosts()
             builds = rsp.get_all_sorted(field, True)
-            self.render("home.html", builds=builds)
+            self.render("home.html", hosts=hosts, builds=builds)
 
         rsp.disconnect()
 
@@ -134,6 +135,31 @@ class SubscribeHandler(tornado.web.RequestHandler):
   Web service of sorting.
   Return json.
 """
+class FilterHandler(tornado.web.RequestHandler):
+    def get(self, filter_field, value, format=json):
+        self.rsp = RedisPubSub()
+
+        if (filter_field == "age"):
+          builds = self.get_all_filtered_by_age(value)
+        elif (filter_field == "host"):
+          builds = self.get_all_filtered_by_host(value)
+
+        if (format == "json"):
+            self.write(json_encode(builds))
+        elif (format == "html"):
+            self.render("all_events_sorted.html", builds=builds)
+
+        self.rsp.disconnect()
+
+    def get_all_filtered_by_age(self, age):
+        reverse = True
+        return self.rsp.get_all_filtered_by_age(int(age), reverse)
+
+    def get_all_filtered_by_host(self, host):
+        reverse = True
+        return self.rsp.get_all_filtered_by_host(host, reverse)
+
+
 class SortHandler(tornado.web.RequestHandler):
     def get(self, sort_field, count, format=json):
         method_to_call = "list_builds_by_"+sort_field
@@ -251,6 +277,8 @@ def main():
     application = tornado.web.Application([
         (r'/realtime', RealtimeHandler),
         (r'/subscribe', SubscribeHandler),
+        (r'/filter/(age)/([0-9]+)/'+response_format_string, FilterHandler),
+        (r'/filter/(host)/(.*)/'+response_format_string, FilterHandler),
         (r'/sort/(.*)/([0-9]+)/'+response_format_string, SortHandler),
         (r'/build/(.*)/([0-9]+)/'+response_format_string, GetByStatusHandler),
         (r'/(hosts|jobs|builds)/'+response_format_string, QueryHandler),

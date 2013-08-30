@@ -92,9 +92,10 @@ class RedisPubSub():
         return hashes
 
     "return everything sorted based on certain field"
-    def get_all_sorted(self, field, reverse=False):
-        # get all builds
-        build_names = self._rc.smembers("builds")
+    def get_all_sorted(self, field, reverse=False, count=100):
+        # get all builds limited by count
+        # build_names = self._rc.smembers("builds")
+        build_names = self._rc.zrange("sort:build_time_in_millis", 0, count)
         builds = []
 
         for build_name in build_names:
@@ -106,6 +107,38 @@ class RedisPubSub():
             builds.append(build)
 
         return sorted(builds, key=itemgetter(field), reverse=reverse)
+
+    def get_all_filtered_by_age(self, age, reverse=False):
+        build_names = self._rc.zrange("sort:build_time_in_millis", 0, -1)
+        builds = []
+
+        for build_name in build_names:
+            build = self._rc.hgetall(build_name)
+            # convert string to int
+            build['build_number'] = int(build['build_number']) if ('build_number' in build) else None
+            build['build_duration'] = int(build['build_duration']) if ('build_duration' in build) else None
+            build['build_time_in_millis'] = int(build['build_time_in_millis']) if ('build_time_in_millis' in build) else None
+            build_time = datetime.utcfromtimestamp(build['build_time_in_millis']/1000)
+            now = datetime.utcnow()
+
+            if ( (now - build_time).days <= age):
+                builds.append(build)
+
+        return sorted(builds, key=itemgetter('build_time_in_millis'), reverse=reverse)
+
+    def get_all_filtered_by_host(self, host, reverse=False):
+        build_names = self._rc.keys(host+":*:*")
+        builds = []
+
+        for build_name in build_names:
+            build = self._rc.hgetall(build_name)
+            # convert string to int
+            build['build_number'] = int(build['build_number']) if ('build_number' in build) else None
+            build['build_duration'] = int(build['build_duration']) if ('build_duration' in build) else None
+            build['build_time_in_millis'] = int(build['build_time_in_millis']) if ('build_time_in_millis' in build) else None
+            builds.append(build)
+
+        return sorted(builds, key=itemgetter('build_time_in_millis'), reverse=reverse)
 
     "list all keys in database, for debug purpose"
     def list_all_keys(self):
@@ -125,7 +158,7 @@ class RedisPubSub():
         data = []
         for build, value in temp:
             # convert milli-seconds to seconds
-            build_date = str(datetime.fromtimestamp(value/1000))
+            build_date = str(datetime.utcfromtimestamp(value/1000))
             data.append((build, build_date))
 
         return data

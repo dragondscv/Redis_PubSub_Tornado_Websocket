@@ -1,10 +1,22 @@
 
 function sortHandler(data) {
-  $("tbody").replaceWith(data);
+  $(".event_tbody").replaceWith(data);
 }
 
 $(document).ready(function(){
   $("#passed_events>thead td").addClass("sort_desc");
+
+  $("#filter #host").change( function(e) {
+    var host = $(this).val();
+    $.get("/filter/host/"+host+"/html", sortHandler, "html");
+  })
+
+  $("#filter #age").bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+      var age = $(this).val();
+      $.get("/filter/age/"+age+"/html", sortHandler, "html");
+    }
+  });
 
   $("thead>tr td").click(function() {
     var reverse = "False";
