@@ -5,6 +5,43 @@
          "changes" : [
             {
                "author" : "lctung",
+               "msg" : "Add status filter",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/static/sort.js"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  }
+               ],
+               "rev" : "31d5dfdc6e3fe363495891ed4913426c534e8538",
+               "time" : "2013-09-04T08:21:52Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "31d5dfdc6e3fe363495891ed4913426c534e8538"
+         },
+         "time_created" : "2013-09-04T15:23:31Z",
+         "version" : "0.4.1"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
                "msg" : "Add age/host filters",
                "paths" : [
                   {
