@@ -121,7 +121,10 @@ class MainHandler(tornado.web.RequestHandler):
             self.write(html)
         else:
             hosts = rsp.get_all_hosts()
-            builds = rsp.get_all_sorted(field, True)
+            #builds = rsp.get_all_sorted(field, True)
+            # get builds built within one day by default
+            age = 1
+            builds = rsp.get_all_filtered_by_age(int(age), True)
             self.render("home.html", hosts=hosts, builds=builds)
 
         rsp.disconnect()
@@ -170,7 +173,7 @@ class FilterHandler(tornado.web.RequestHandler):
         builds = []
 
         for buildname in buildnames:
-            build = self.rsp.get_build(buildname[0])
+            build = self.rsp.get_build_by_key(buildname[0])
             builds.append(build)
 
         return builds

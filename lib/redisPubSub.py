@@ -69,7 +69,7 @@ class RedisPubSub():
         return build
 
     "get a build given build key in format of host_name:job_name:build_number"
-    def get_build(self, build_key):
+    def get_build_by_key(self, build_key):
         build = self._rc.hgetall(build_key)
 
         if ('test_result' in build and build['test_result']):
