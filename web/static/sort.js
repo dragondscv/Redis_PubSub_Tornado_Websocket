@@ -18,6 +18,12 @@ $(document).ready(function(){
     }
   });
 
+  $("#filter #status").change( function(e) {
+    var status = $(this).val();
+    $.get("/filter/status/"+status+"/html", sortHandler, "html");
+  });
+
+
   $("thead>tr td").click(function() {
     var reverse = "False";
 

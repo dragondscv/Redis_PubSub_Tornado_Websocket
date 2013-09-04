@@ -143,6 +143,8 @@ class FilterHandler(tornado.web.RequestHandler):
           builds = self.get_all_filtered_by_age(value)
         elif (filter_field == "host"):
           builds = self.get_all_filtered_by_host(value)
+        elif (filter_field == "status"):
+          builds = self.get_all_filtered_by_status(value)
 
         if (format == "json"):
             self.write(json_encode(builds))
@@ -159,6 +161,19 @@ class FilterHandler(tornado.web.RequestHandler):
         reverse = True
         return self.rsp.get_all_filtered_by_host(host, reverse)
 
+    def get_all_filtered_by_status(self, status, format=json):
+        # get all builds
+        count = sys.maxint
+        method_to_call = "list_"+status+"_builds"
+
+        buildnames = getattr(self.rsp, method_to_call)(count)
+        builds = []
+
+        for buildname in buildnames:
+            build = self.rsp.get_build(buildname[0])
+            builds.append(build)
+
+        return builds
 
 class SortHandler(tornado.web.RequestHandler):
     def get(self, sort_field, count, format=json):
@@ -279,6 +294,7 @@ def main():
         (r'/subscribe', SubscribeHandler),
         (r'/filter/(age)/([0-9]+)/'+response_format_string, FilterHandler),
         (r'/filter/(host)/(.*)/'+response_format_string, FilterHandler),
+        (r'/filter/(status)/(.*)/'+response_format_string, FilterHandler),
         (r'/sort/(.*)/([0-9]+)/'+response_format_string, SortHandler),
         (r'/build/(.*)/([0-9]+)/'+response_format_string, GetByStatusHandler),
         (r'/(hosts|jobs|builds)/'+response_format_string, QueryHandler),
