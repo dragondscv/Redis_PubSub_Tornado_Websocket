@@ -43,47 +43,6 @@ class RedisPubSub():
 
         return results
 
-    "get all builds belong to the host_name:job_name"
-    def get_builds(self, host_name, job_name):
-        results = {}
-        builds = self.get_all_builds()
-
-        for build_key in builds:
-            host_name_ = build_key.split(':')[0]
-            job_name_ = build_key.split(':')[1]
-
-            if (host_name_ == host_name and job_name_ == job_name):
-                build = self._rc.hgetall(build_key)
-                results[build_key] = build
-
-        return results
-
-    "get a build belong to the host_name:job_name:build_number"
-    def get_build(self, host_name, job_name, build_number):
-        build = self._rc.hgetall(host_name+":"+job_name+":"+build_number)
-
-        if ('test_result' in build and build['test_result']):
-            test_data = json.loads(build['test_result']);
-            build['test_result'] = test_data
-
-        return build
-
-    "get a build given build key in format of host_name:job_name:build_number"
-    def get_build_by_key(self, build_key):
-        build = self._rc.hgetall(build_key)
-
-        if ('test_result' in build and build['test_result']):
-            test_data = json.loads(build['test_result']);
-            build['test_result'] = test_data
-
-        # convert string to int
-        build['build_number'] = int(build['build_number']) if ('build_number' in build) else None
-        build['build_duration'] = int(build['build_duration']) if ('build_duration' in build) else None
-        build['build_time_in_millis'] = int(build['build_time_in_millis']) if ('build_time_in_millis' in build) else None
-
-        return build
-
-
     "return everything in database"
     def get_all(self):
         # get slaves
@@ -106,23 +65,48 @@ class RedisPubSub():
 
         return hashes
 
-    "return everything sorted based on certain field"
-    def get_all_sorted(self, field, reverse=False, count=100):
-        # get all builds limited by count
-        # build_names = self._rc.smembers("builds")
-        build_names = self._rc.zrange("sort:build_time_in_millis", 0, count)
+
+    "get build(s) given key pattern"
+    def get_builds_by_key_pattern(self, key_pattern, reverse=True):
+        build_names = self._rc.keys(key_pattern)
         builds = []
 
         for build_name in build_names:
             build = self._rc.hgetall(build_name)
+
+            if ('test_result' in build and build['test_result']):
+                test_data = json.loads(build['test_result']);
+                build['test_result'] = test_data
+
             # convert string to int
             build['build_number'] = int(build['build_number']) if ('build_number' in build) else None
             build['build_duration'] = int(build['build_duration']) if ('build_duration' in build) else None
             build['build_time_in_millis'] = int(build['build_time_in_millis']) if ('build_time_in_millis' in build) else None
+
             builds.append(build)
 
-        return sorted(builds, key=itemgetter(field), reverse=reverse)
+        return sorted(builds, key=itemgetter('build_time_in_millis'), reverse=reverse)
 
+    "get all builds belong to the host_name:job_name"
+    def get_builds(self, host_name, job_name):
+        return self.get_builds_by_key_pattern(host_name+":"+job_name+":*");
+
+    "get a build belong to the host_name:job_name:build_number"
+    def get_build(self, host_name, job_name, build_number):
+        return self.get_builds_by_key_pattern(host_name+":"+job_name+":"+build_number);
+
+    "get a build given build key in format of host_name:job_name:build_number"
+    def get_build_by_key(self, build_key):
+        return self.get_builds_by_key_pattern(build_key)[0];
+
+    "get builds given job name pattern. glob pattern is used."
+    def get_builds_by_job_name_pattern(self, pattern, reverse):
+        return self.get_builds_by_key_pattern("*:"+pattern+":*");
+
+
+    """
+        Filter functions
+    """
     "return all builds built within 'age' days"
     def get_all_filtered_by_age(self, age, reverse=False):
         build_names = self._rc.zrange("sort:build_time_in_millis", 0, -1)
@@ -140,11 +124,21 @@ class RedisPubSub():
             if ( (now - build_time).days < age):
                 builds.append(build)
 
-        return sorted(builds, key=itemgetter('build_time_in_millis'), reverse=reverse)
+        return builds
 
     "return all builds given host(master) name"
     def get_all_filtered_by_host(self, host, reverse=False):
-        build_names = self._rc.keys(host+":*:*")
+        return self.get_builds_by_key_pattern(host+":*:*");
+
+
+    """
+        Sort functions
+    """
+    "return everything sorted based on certain field"
+    def get_all_sorted(self, field, reverse=False, count=100):
+        # get all builds limited by count
+        # build_names = self._rc.smembers("builds")
+        build_names = self._rc.zrange("sort:build_time_in_millis", 0, count)
         builds = []
 
         for build_name in build_names:
@@ -155,18 +149,8 @@ class RedisPubSub():
             build['build_time_in_millis'] = int(build['build_time_in_millis']) if ('build_time_in_millis' in build) else None
             builds.append(build)
 
-        return sorted(builds, key=itemgetter('build_time_in_millis'), reverse=reverse)
+        return sorted(builds, key=itemgetter(field), reverse=reverse)
 
-    "list all keys in database, for debug purpose"
-    def list_all_keys(self):
-        hashes = self._rc.keys()
-        return hashes
-
-
-
-    """
-        Sort functions
-    """
 
     "list builds sorted by metric"
     def list_sorted_builds(self, limit, metric, desc=True, withscores=True):
@@ -189,7 +173,7 @@ class RedisPubSub():
     def list_builds_by_time(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "build_time_in_millis", desc, withscores)
 
-    # not working yet because yhudson does not support scheduled time
+    # not working for hudson 1.424 and older
     "list builds sorted by scheduled time"
     def list_builds_by_start_time(self, limit, desc=True, withscores=True):
         return self.list_sorted_builds(limit, "build_start_time_in_millis", desc, withscores)
