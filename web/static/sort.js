@@ -18,6 +18,13 @@ $(document).ready(function(){
     }
   });
 
+  $("#filter #job_name").bind('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+      var job_name = $(this).val();
+      $.get("/filter/job_name/"+encodeURIComponent(job_name)+"/html", sortHandler, "html");
+    }
+  });
+
   $("#filter #status").change( function(e) {
     var status = $(this).val();
     $.get("/filter/status/"+status+"/html", sortHandler, "html");

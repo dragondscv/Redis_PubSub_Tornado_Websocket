@@ -15,6 +15,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.websocket
 import tornado.web
+import urllib
 from tornado.escape import json_encode
 from tornado.options import define, options
 from functools import partial
@@ -121,7 +122,6 @@ class MainHandler(tornado.web.RequestHandler):
             self.write(html)
         else:
             hosts = rsp.get_all_hosts()
-            #builds = rsp.get_all_sorted(field, True)
             # get builds built within one day by default
             age = 1
             builds = rsp.get_all_filtered_by_age(int(age), True)
@@ -141,6 +141,7 @@ class SubscribeHandler(tornado.web.RequestHandler):
 class FilterHandler(tornado.web.RequestHandler):
     def get(self, filter_field, value, format=json):
         self.rsp = RedisPubSub()
+        value = urllib.unquote(value).decode('utf-8')
 
         if (filter_field == "age"):
           builds = self.get_all_filtered_by_age(value)
@@ -148,6 +149,8 @@ class FilterHandler(tornado.web.RequestHandler):
           builds = self.get_all_filtered_by_host(value)
         elif (filter_field == "status"):
           builds = self.get_all_filtered_by_status(value)
+        elif (filter_field == "job_name"):
+          builds = self.get_builds_by_job_name_pattern(value)
 
         if (format == "json"):
             self.write(json_encode(builds))
@@ -155,6 +158,10 @@ class FilterHandler(tornado.web.RequestHandler):
             self.render("all_events_sorted.html", builds=builds)
 
         self.rsp.disconnect()
+
+    def get_builds_by_job_name_pattern(self, job_name):
+        reverse = True
+        return self.rsp.get_builds_by_job_name_pattern(job_name, reverse)
 
     def get_all_filtered_by_age(self, age):
         reverse = True
@@ -298,6 +305,7 @@ def main():
         (r'/filter/(age)/([0-9]+)/'+response_format_string, FilterHandler),
         (r'/filter/(host)/(.*)/'+response_format_string, FilterHandler),
         (r'/filter/(status)/(.*)/'+response_format_string, FilterHandler),
+        (r'/filter/(job_name)/(.*)/'+response_format_string, FilterHandler),
         (r'/sort/(.*)/([0-9]+)/'+response_format_string, SortHandler),
         (r'/build/(.*)/([0-9]+)/'+response_format_string, GetByStatusHandler),
         (r'/(hosts|jobs|builds)/'+response_format_string, QueryHandler),
