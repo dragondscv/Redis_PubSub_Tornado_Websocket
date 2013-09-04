@@ -188,7 +188,7 @@ class SortHandler(tornado.web.RequestHandler):
         if (format == "json"):
             self.write(json_encode(builds))
         elif (format == "html"):
-            self.render("sort.html", count=count, sort_field=sort_field, limit=count, builds=builds)
+            self.write("HTML format not support.")
 
         rsp.disconnect()
 
@@ -202,7 +202,7 @@ class GetByStatusHandler(tornado.web.RequestHandler):
         if (format == "json"):
             self.write(json_encode(builds))
         elif (format == "html"):
-            self.render("status.html", count=count, status=status, limit=count, builds=builds)
+            self.write("HTML format not support.")
 
         rsp.disconnect()
 
