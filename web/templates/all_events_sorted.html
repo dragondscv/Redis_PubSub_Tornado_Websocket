@@ -3,8 +3,8 @@
       {% for build in builds %}
         <tr>
           <td>{% if 'host_name' in build %} {{ build['host_name'] }} {% end %}</td>
-          <td>{% if 'job_name' in build %} {{ build['job_name'] }} {% end %}</td>
-          <td>{% if 'build_number' in build %} {{ build['build_number'] }} {% end %}</td>
+          <td>{% if 'job_name' in build %} {% if 'job_url' in build %} <a href="{{ build['job_url'] }}"> {% end %}{{ build['job_name'] }} {% end %}</td>
+          <td>{% if 'build_number' in build %} {% if 'full_url' in build %} <a href="{{ build['full_url'] }}"> {% end %} {{ build['build_number'] }} </a> {% end %}</td>
           <td>{% if 'build_status' in build %} {{ build['build_status'] }} {% end %}</td>
           <td>{% if 'build_description' in build %} {% raw build['build_description'] %} {% end %}</td>
           <td>{% if 'build_time' in build %} {{ build['build_time'] }} {% end %}</td>
