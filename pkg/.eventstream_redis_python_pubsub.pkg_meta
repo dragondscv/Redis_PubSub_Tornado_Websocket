@@ -5,6 +5,115 @@
          "changes" : [
             {
                "author" : "lctung",
+               "msg" : "Add 3rd party library information in README.md",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "README.md"
+                  }
+               ],
+               "rev" : "df1f7269e2b80ad6b09152f5e3c18ded4af466ed",
+               "time" : "2013-09-04T12:54:19Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Add apache 2.0 license declaration.",
+               "paths" : [
+                  {
+                     "action" : "A",
+                     "path" : "LICENSE"
+                  }
+               ],
+               "rev" : "37b9b5a6d721d17b4e0618fa04d5599d71251ac8",
+               "time" : "2013-09-04T12:56:59Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Change title 'host' to 'master' in filter and table.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  }
+               ],
+               "rev" : "61ad410adbbd12694eb9d0e19e6a56fa28326084",
+               "time" : "2013-09-04T14:19:46Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Remove top links for sorting and querying by status.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/base.html"
+                  }
+               ],
+               "rev" : "fab3dd38a029fc790792698f49553ae0d8abcf90",
+               "time" : "2013-09-04T14:24:27Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Refactory reidsPubSub lib",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "lib/redisPubSub.py"
+                  }
+               ],
+               "rev" : "829d0ea7d625868827b4f7ca2e775ca2f3cdb821",
+               "time" : "2013-09-04T16:24:32Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "Add job name filter.",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/pubsubWebInterface.py"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/static/sort.js"
+                  },
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/home.html"
+                  }
+               ],
+               "rev" : "e84c9211512d172f8fe82573f43d398ef8ffadca",
+               "time" : "2013-09-04T16:24:43Z"
+            },
+            {
+               "author" : "lctung",
+               "msg" : "add links to job name and build name",
+               "paths" : [
+                  {
+                     "action" : "M",
+                     "path" : "web/templates/all_events_sorted.html"
+                  }
+               ],
+               "rev" : "1e05835c6757784176b8576cd9f2cdc4fd8efe3b",
+               "time" : "2013-09-04T17:25:46Z"
+            }
+         ],
+         "comments" : [],
+         "scm_info" : {
+            "branch" : "master",
+            "path" : "/",
+            "repo" : "git@git.corp.yahoo.com:Media/eventstream_redis_python_pubsub.git",
+            "revision" : "1e05835c6757784176b8576cd9f2cdc4fd8efe3b"
+         },
+         "time_created" : "2013-09-05T00:26:14Z",
+         "version" : "0.4.1.2"
+      },
+      {
+         "changes" : [
+            {
+               "author" : "lctung",
                "msg" : "Change get_build function name to get_build_by_key to fix name confliction.",
                "paths" : [
                   {

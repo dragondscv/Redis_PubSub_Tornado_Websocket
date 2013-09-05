@@ -1,4 +1,60 @@
 +----------------------------------------+
+| version 0.4.1.2 (2013-09-05T00:26:14Z) |
++----------------------------------------+----------------------------------
+Author: lctung
+Time: 2013-09-04 12:54:19
+
+Add 3rd party library information in README.md
+
+changed: README.md
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-09-04 12:56:59
+
+Add apache 2.0 license declaration.
+
+  added: LICENSE
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-09-04 14:19:46
+
+Change title 'host' to 'master' in filter and table.
+
+changed: web/templates/home.html
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-09-04 14:24:27
+
+Remove top links for sorting and querying by status.
+
+   root: /web
+changed: pubsubWebInterface.py, templates/base.html
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-09-04 16:24:32
+
+Refactory reidsPubSub lib
+
+changed: lib/redisPubSub.py
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-09-04 16:24:43
+
+Add job name filter.
+
+   root: /web
+changed: pubsubWebInterface.py, static/sort.js, templates/home.html
+----------------------------------------------------------------------------
+Author: lctung
+Time: 2013-09-04 17:25:46
+
+add links to job name and build name
+
+changed: web/templates/all_events_sorted.html
+----------------------------------------------------------------------------
+
+
++----------------------------------------+
 | version 0.4.1.1 (2013-09-04T17:24:15Z) |
 +----------------------------------------+----------------------------------
 Author: lctung
