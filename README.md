@@ -1,6 +1,3 @@
-eventstream_redis_python_pubsub
-===============================
-
 Files:
 
   lib/redisPubSub.py: the Redis API. publisher.py, subscriber.py and pubsubWebInterface.py call it to talk to Redis
